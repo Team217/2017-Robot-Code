@@ -59,9 +59,8 @@ public class Robot extends IterativeRobot {
 		
 		allSticks = Math.abs(gamepad.getX()) + Math.abs(gamepad.getY()) + Math.abs(gamepad.getZ());   //initializes variable for the following if() statement
 		
-		if(allSticks > (1 / motorRatio)) {       //makes sure the value sent to the motors is never above 1
+		if(allSticks > (1 / motorRatio))       //makes sure the value sent to the motors is never above 1
 			motorRatio = 1 / allSticks;
-		}
 		
 		frontLeft.set(FLSpeed * motorRatio);
 		backRight.set(BRSpeed * motorRatio);
@@ -75,17 +74,15 @@ public class Robot extends IterativeRobot {
 		FBLStrafe = 0;
 		FBRStrafe = 0;
 		
-		if(gamepad.getX() < 0) {                     //Makes it so both wheels move to strafe
+		if(gamepad.getX() < 0)                     //Makes it so both wheels move to strafe
 			FBLStrafe = FBLStrafe + gamepad.getX();
-		} else if(gamepad.getX() > 0) {
+		else if(gamepad.getX() > 0)
 			FBRStrafe = FBLStrafe + gamepad.getX();
-		}
 		
-		if(gamepad.getZ() < 0) {
+		if(gamepad.getZ() < 0)
 			FBLStrafe = FBLStrafe + gamepad.getZ();
-		} else if(gamepad.getZ() > 0) {
+		else if(gamepad.getZ() > 0)
 			FBRStrafe = FBRStrafe + gamepad.getZ();
-		}
 		
 		FLSpeed = -gamepad.getY() + FBLStrafe + FBRStrafe;      //set the power
 		BLSpeed = -gamepad.getY() - FBLStrafe - FBRStrafe;
@@ -95,11 +92,10 @@ public class Robot extends IterativeRobot {
 		allSticks = Math.abs(gamepad.getY()) + Math.abs(gamepad.getX()) + Math.abs(gamepad.getZ());  //initializes the variable for the following if() statement
 		allSticksRight = Math.abs(gamepad.getX()) + Math.abs(gamepad.getRawAxis(5)) + Math.abs(gamepad.getZ());
 		
-		if(allSticks > (1 / motorRatio) && allSticks >= allSticksRight) {    //makes sure the value sent to the motor is never above 1
+		if(allSticks > (1 / motorRatio) && allSticks >= allSticksRight)    //makes sure the value sent to the motor is never above 1
 			motorRatio = 1 / allSticks;
-		} else if(allSticksRight > (1 / motorRatio) && allSticksRight > allSticks) {
+		else if(allSticksRight > (1 / motorRatio) && allSticksRight > allSticks)
 			motorRatio = 1 / allSticksRight;
-		}
 		
 		frontLeft.set(FLSpeed * motorRatio);
 		backRight.set(BRSpeed * motorRatio);
@@ -185,4 +181,3 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 	}
 }
-
