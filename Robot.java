@@ -27,7 +27,9 @@ public class Robot extends IterativeRobot {
 	
 	Joystick driver, operator;
 	
-	Solenoid FRS, FLS, BRS, BLS, intakeLeft;
+	Solenoid fRS, fLS, bRS, bLS, intakeLeft;
+
+	boolean driveChange = true;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -54,20 +56,29 @@ public class Robot extends IterativeRobot {
 		            }
 		        }).start();
 		        */
+
+		//Drive Base
 		frontLeft = new CANTalon(2);
 		frontRight = new CANTalon(1);
 		backLeft = new CANTalon(3);
 		backRight = new CANTalon(0);
-		
+
+		//Front Arm
 		intakeArm = new CANTalon(7);
-		
+
+
+		//Controllers
 		driver = new Joystick(0);
 		operator = new Joystick(1);
-		
-		FRS = new Solenoid(1);
-		FLS = new Solenoid(2);
-		BRS = new Solenoid(3);
-		BLS = new Solenoid(4);
+
+
+		//Butterfly Solenoids
+		fRS = new Solenoid(1);
+		fLS = new Solenoid(2);
+		bRS = new Solenoid(3);
+		bLS = new Solenoid(4);
+
+		//Arm toggle
 		intakeLeft = new Solenoid(5);
 	}
 
@@ -94,37 +105,45 @@ public class Robot extends IterativeRobot {
 		
 		intakeArm.set(operator.getY());
 		
-		if(driver.getRawButton(9)){
-			FRS.set(true);
-			FLS.set(true);
-			BRS.set(true);
-			BLS.set(true);
-		}
-		else{
-			FRS.set(false);
-			FLS.set(false);
-			BRS.set(false);
-			BLS.set(false);
-		}
-		
+		//moves intake arm
 		if(operator.getRawButton(7)){
 			intakeLeft.set(true);
 		}
 		else{
-			intakeLeft.set(false);
+			if(driver.getRawButton(8)){
+				intakeLeft.set(false);
+			}
 		}
 		
 	}
 	
 	void driveBase(){
 		//right side is reversed
-		double speed = driver.getY();
-		double turn = -driver.getZ();
+		double speed = driver.getY(); //magnitude of left joystick in Y direction
+		double turn = -driver.getZ(); //magnitude of right joystick in Z direction
 		
+		//basic arcade drive
 		frontLeft.set(speed + turn);
 		backLeft.set(speed + turn);
 		frontRight.set(-speed + turn);
 		backRight.set(-speed + turn);
+
+
+		//butterfly switch from omni to traction and vice versa
+		if(driver.getRawButton(9)){
+			fRS.set(true);
+			fLS.set(true);
+			bRS.set(true);
+			bLS.set(true);
+		}
+		else{
+			if(driver.getRawButton(10){
+				fRS.set(false);
+				fLS.set(false);
+				bRS.set(false);
+				bLS.set(false);
+			}
+		}
 		
 	}
 
