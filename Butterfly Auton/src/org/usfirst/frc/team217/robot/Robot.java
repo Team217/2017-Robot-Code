@@ -20,9 +20,9 @@ public class Robot extends IterativeRobot {
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
 	// BEGIN CONSTANTS SECTION
-	final int BLTalonPort = 2;            // set these variables to the ports of the wheel motors
+	final int BLTalonPort = 1;            // set these variables to the ports of the wheel motors
 	final int BRTalonPort = 9;
-	final int FRTalonPort = 6;
+	final int FRTalonPort = 3;
 	final int FLTalonPort = 0;
 	
 	final double motorRatio = 0.5;        // sets the maximum speed for drive motors
@@ -112,15 +112,15 @@ public class Robot extends IterativeRobot {
 			
 			case 1:
 				
-				backLeft.set(-normPID(6600, backLeft.getEncPosition(), 0.000300, 0.000142));
-				backRight.set(-normPID(-5300, backRight.getEncPosition(), 0.000500, 0));
-				frontLeft.set(-normPID(6600, backLeft.getEncPosition(), 0.000300, 0.000142));
-				frontRight.set(-normPID(-5300, backRight.getEncPosition(),0.000500, 0));
+				backLeft.set(-normPID(5800, backLeft.getEncPosition(), 0.000350, 0));
+				backRight.set(-normPID(-5400, backRight.getEncPosition(), 0.000500, 0));
+				frontLeft.set(-normPID(5800, backLeft.getEncPosition(), 0.000350, 0));
+				frontRight.set(-normPID(-5400, backRight.getEncPosition(),0.000500, 0));
 				
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
 				System.out.println("Back Right Encoder: " + backRight.getEncPosition());
 				
-				if(backLeft.getEncPosition() >= 5200 && backLeft.getEncPosition() <= 5600 && backRight.getEncPosition() <= -5400 && backRight.getEncPosition() >= -5900) {
+				if(backLeft.getEncPosition() >= 5700 && backLeft.getEncPosition() <= 6200 && backRight.getEncPosition() <= -5400 && backRight.getEncPosition() >= -5800) {
 					backLeft.setEncPosition(0);
 					backRight.setEncPosition(0);
 					
@@ -131,9 +131,9 @@ public class Robot extends IterativeRobot {
 				
 			case 2:
 				
-				backLeft.set(-normPID(750, backLeft.getEncPosition(), 0.000650, 0.000100));
+				backLeft.set(-normPID(750, backLeft.getEncPosition(), 0.000650, 0));
 				backRight.set(-normPID(-950, backRight.getEncPosition(), 0.000650, 0));
-				frontLeft.set(-normPID(750, backLeft.getEncPosition(), 0.000650, 0.000100));
+				frontLeft.set(-normPID(750, backLeft.getEncPosition(), 0.000650, 0));
 				frontRight.set(-normPID(-950, backRight.getEncPosition(),0.000650, 0));
 				
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
@@ -150,9 +150,9 @@ public class Robot extends IterativeRobot {
 				
 			case 3:
 				
-				backLeft.set(-normPID(-750, backLeft.getEncPosition(), 0.000650, 0.000200));
+				backLeft.set(-normPID(-750, backLeft.getEncPosition(), 0.000650, 0));
 				backRight.set(-normPID(2000, backRight.getEncPosition(), 0.000650, 0));
-				frontLeft.set(-normPID(-750, backLeft.getEncPosition(), 0.000650, 0.000200));
+				frontLeft.set(-normPID(-750, backLeft.getEncPosition(), 0.000650, 0));
 				frontRight.set(-normPID(2000, backRight.getEncPosition(),0.000650, 0));
 				
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
@@ -196,9 +196,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		frontLeft.set(0.412);
+		frontLeft.set(0.5);
 		frontRight.set(-0.5);
-		backLeft.set(0.412);
+		backLeft.set(0.5);
 		backRight.set(-0.5);
 	}
 }
