@@ -1,7 +1,7 @@
 package org.usfirst.frc.team217.robot;
 
 import com.ctre.CANTalon;
-
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +36,9 @@ public class Robot extends IterativeRobot {
 	CANTalon backLeft;
 	CANTalon frontRight;
 	CANTalon backRight;
-
+	
+	Joystick driver;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -70,6 +72,8 @@ public class Robot extends IterativeRobot {
 		frontRight = new CANTalon(FRTalonPort);
 		backLeft = new CANTalon(BLTalonPort);
 		backRight = new CANTalon(BRTalonPort);
+		
+		driver = new Joystick(0);
 	}
 
 	/**
@@ -112,15 +116,15 @@ public class Robot extends IterativeRobot {
 			
 			case 1:
 				
-				backLeft.set(-normPID(5800, backLeft.getEncPosition(), 0.000350, 0));
-				backRight.set(-normPID(-5400, backRight.getEncPosition(), 0.000500, 0));
-				frontLeft.set(-normPID(5800, backLeft.getEncPosition(), 0.000350, 0));
-				frontRight.set(-normPID(-5400, backRight.getEncPosition(),0.000500, 0));
+				backLeft.set(-normPID(6400, backLeft.getEncPosition(), 0.000350, 0));
+				backRight.set(-normPID(-6000, backRight.getEncPosition(), 0.000500, 0));
+				frontLeft.set(-normPID(6400, backLeft.getEncPosition(), 0.000350, 0));
+				frontRight.set(-normPID(-6000, backRight.getEncPosition(),0.000500, 0));
 				
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
 				System.out.println("Back Right Encoder: " + backRight.getEncPosition());
 				
-				if(backLeft.getEncPosition() >= 5700 && backLeft.getEncPosition() <= 6200 && backRight.getEncPosition() <= -5400 && backRight.getEncPosition() >= -5800) {
+				if(backLeft.getEncPosition() >= 6200 && backLeft.getEncPosition() <= 6600 && backRight.getEncPosition() <= -6000 && backRight.getEncPosition() >= -6400) {
 					backLeft.setEncPosition(0);
 					backRight.setEncPosition(0);
 					
@@ -128,8 +132,8 @@ public class Robot extends IterativeRobot {
 				}
 				
 				break;
-				
-			case 2:
+			/*	
+			case 3:
 				
 				backLeft.set(-normPID(750, backLeft.getEncPosition(), 0.000650, 0));
 				backRight.set(-normPID(-950, backRight.getEncPosition(), 0.000650, 0));
@@ -147,8 +151,8 @@ public class Robot extends IterativeRobot {
 				}
 				
 				break;
-				
-			case 3:
+				*/
+			case 2:
 				
 				backLeft.set(-normPID(-750, backLeft.getEncPosition(), 0.000650, 0));
 				backRight.set(-normPID(2000, backRight.getEncPosition(), 0.000650, 0));
@@ -189,6 +193,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		
+		
 	}
 
 	/**
