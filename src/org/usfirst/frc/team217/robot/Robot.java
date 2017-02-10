@@ -1,6 +1,11 @@
 package org.usfirst.frc.team217.robot;
 
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,20 +17,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser<String> chooser = new SendableChooser<>();
-
+	CANTalon flyWheel,lifter,kicker,wheelOfDoom;
+	Joystick driver;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
+		flyWheel = new CANTalon(2);
+		lifter = new CANTalon(1);
+		kicker = new CANTalon(3);
+		wheelOfDoom = new CANTalon(6);
+		
+		flyWheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		
+		flyWheel.reverseSensor(true);
+		
+		flyWheel.configNominalOutputVoltage(+0.0f,  -0.0f);
+		flyWheel.configPeakOutputVoltage(+12.0f, -12.0f);
+		
+		flyWheel.setProfile(0);
+		flyWheel.setF(.0651537);
+		flyWheel.setD(0);
+		flyWheel.setI(0);
+		flyWheel.setP(0.25);
+		
+		driver = new Joystick(0);
+		
 	}
 
 	/**
@@ -41,10 +61,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
+		
 	}
 
 	/**
@@ -52,22 +69,47 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			break;
-		}
+		
 	}
 
+	@Override
+	public void teleopInit(){
+		flyWheel.setEncPosition(0);
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
+		double flyWheelRPM = -4090;
+		flyWheel.setF(fGain(flyWheelRPM));
+		//double speed = deadBand(driver.getY());
+		if(driver.getRawButton(1)){
+		kicker.set(-1);
+		lifter.set(1);
+		flyWheel.changeControlMode(TalonControlMode.Speed);
+		flyWheel.set(flyWheelRPM);
+		}
+		else{
+			kicker.set(0);
+			lifter.set(0);
+			flyWheel.changeControlMode(TalonControlMode.PercentVbus);
+			flyWheel.set(0);
+		}
+		
+		if(driver.getRawButton(2)){
+			wheelOfDoom.set(.5);
+		}
+		else{
+			wheelOfDoom.set(0);
+		}
+		
+		System.out.println(flyWheel.getSpeed());
+		/*
+		double targetSpeed = speed * 2200;
+		flyWheel.changeControlMode(TalonControlMode.Speed);
+		flyWheel.set(targetSpeed);
+		*/
 	}
 
 	/**
@@ -75,6 +117,20 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	
+	double deadBand(double joyStick){
+		if(joyStick > -0.08 && joyStick < 0.08){
+			joyStick = 0;
+		}
+		return joyStick;
+	}
+	
+	double fGain(double rpm){
+		double FGain;
+		FGain = 1023/(4096*rpm/600);
+		return FGain;
+		
 	}
 }
 
