@@ -126,7 +126,7 @@ public class Robot extends IterativeRobot {
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
 				System.out.println("Back Right Encoder: " + backRight.getEncPosition());
 				
-				if(backLeft.getEncPosition() >= 6200 && backLeft.getEncPosition() <= 6600 && backRight.getEncPosition() <= -5900 && backRight.getEncPosition() >= -6400) {
+				if(backLeft.getEncPosition() >= 6150 && backLeft.getEncPosition() <= 6600 && backRight.getEncPosition() <= -5850 && backRight.getEncPosition() >= -6400) {
 					
 					backLeft.set(0);
 					backRight.set(0);
@@ -172,15 +172,15 @@ public class Robot extends IterativeRobot {
 				
 				// This case moves the robot to the hopper itself to gather the balls
 				
-				backLeft.set(-normPID(1200, backLeft.getEncPosition(), 0.000650, 0));
-				backRight.set(-normPID(-1200, backRight.getEncPosition(), 0.000650, 0));
-				frontLeft.set(-normPID(1200, backLeft.getEncPosition(), 0.000650, 0));
-				frontRight.set(-normPID(-1200, backRight.getEncPosition(),0.000650, 0));
+				backLeft.set(-normPID(1150, backLeft.getEncPosition(), 0.000650, 0));
+				backRight.set(-normPID(-1450, backRight.getEncPosition(), 0.000660, 0));
+				frontLeft.set(-normPID(1150, backLeft.getEncPosition(), 0.000650, 0));
+				frontRight.set(-normPID(-1450, backRight.getEncPosition(),0.000660, 0));
 				
 				System.out.println("Back Left Encoder: " + backLeft.getEncPosition());
 				System.out.println("Back Right Encoder: " + backRight.getEncPosition());
 				
-				if(backLeft.getEncPosition() >= 1200 && backLeft.getEncPosition() <= 1400 && backRight.getEncPosition() <= -1000 && backRight.getEncPosition() >= -1200) {
+				if(backLeft.getEncPosition() >= 1150 && backLeft.getEncPosition() <= 1350 && backRight.getEncPosition() <= -1450 && backRight.getEncPosition() >= -1650) {
 					
 					backLeft.set(0);
 					backRight.set(0);
