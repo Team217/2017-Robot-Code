@@ -6,13 +6,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 public class Robot extends IterativeRobot {
 	
 	final String defaultAuto = "Default";
@@ -33,21 +26,6 @@ public class Robot extends IterativeRobot {
 	double FBLSpeed, FBRSpeed;          // variables to hold the speed of the left and right motors
 	double allSticks;                   // variable to make sure motor speed is never set to greater than 1
 	
-	// Booleans for motorRatio code
-	
-	boolean key1 = false,
-			key2 = false,
-			key3 = false,
-			key4 = false,
-			key5 = false,
-			key6 = false,
-			key7 = false,
-			key8 = false,
-			key9 = false,
-			key10 = false;
-	
-	// End booleans for motorRatio code
-	
 	CANTalon frontLeft;
 	CANTalon backLeft;
 	CANTalon frontRight;
@@ -56,6 +34,8 @@ public class Robot extends IterativeRobot {
 	DoubleSolenoid FLDrop, FRDrop, BLDrop, BRDrop;
 	
 	Joystick driver, operator;
+	
+	// Begin PID Section
 	
 	double target = 0, position = 0, PIDSpeed = 0, error = 0, cumulativeError = 0;
 	
@@ -75,6 +55,12 @@ public class Robot extends IterativeRobot {
 		return PIDSpeed;
 	}
 	
+	// End PID Section
+	
+	// Begin Special Motor Code Functions and Variables
+	
+	double key = 0;                     // variable to control the next key state
+	
 	boolean anyButtonPressed() {
 		
 		int j;
@@ -91,6 +77,8 @@ public class Robot extends IterativeRobot {
 		
 		return false;
 	}
+	
+	// End Special Motor Code Functions and Variables
 
 	@Override
 	public void robotInit() {
@@ -112,30 +100,10 @@ public class Robot extends IterativeRobot {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		
-		key1 = false;              // resets the pointless code to be false
-		key2 = false;
-		key3 = false;
-		key4 = false;
-		key5 = false;
-		key6 = false;
-		key7 = false;
-		key8 = false;
-		key9 = false;
-		key10 = false;
+		key = 0;
 		
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional comparisons to the
-	 * switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
 	@Override
 	public void autonomousInit() {
 		
@@ -156,9 +124,6 @@ public class Robot extends IterativeRobot {
 		
 	}
 
-	/**
-	 * This function is called periodically during autonomous
-	 */
 	@Override
 	public void autonomousPeriodic() {
 		
@@ -194,7 +159,7 @@ public class Robot extends IterativeRobot {
 					backLeft.setEncPosition(0);
 					backRight.setEncPosition(0);
 					
-					i++;          // continues to next case
+					i++;
 					
 				}
 				
@@ -214,7 +179,7 @@ public class Robot extends IterativeRobot {
 				
 				if(backLeft.getEncPosition() <= 600 && backLeft.getEncPosition() >= 400) {
 					
-					backLeft.set(0.25);          //keeps motors going to reach the hopper in time for the balls
+					backLeft.set(0.25);          // keeps motors going to reach the hopper in time for the balls
 					backRight.set(0.25);
 					frontRight.set(0.25);
 					frontLeft.set(0.25);
@@ -279,159 +244,83 @@ public class Robot extends IterativeRobot {
 			break;
 		}
 	}
-
-	/**
-	 * This function is called periodically during operator control
-	 * 
-	 */
 	
 	@Override
 	public void teleopPeriodic() {
 		
-		// Special code for motorRatio
+		// Special useless code for motorRatio
 		
-		if(driver.getPOV() == 0)
-			key1 = true;
+		if(driver.getPOV() == 0 && key == 0)
+			key++;
 		
-		if(key1 && driver.getPOV() == 0)
-			key2 = true;
-		else if(!anyButtonPressed())
-			key1 = true;
-		else
-			key1 = false;
+		if(key == 1 && driver.getPOV() == 0)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
 		
-		if(key2 && driver.getPOV() == 180)
-			key3 = true;
-		else if(!anyButtonPressed())
-			key2 = true;
-		else {
-			key1 = false;
-			key2 = false;
+		if(key == 2 && driver.getPOV() == 180)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 3 && driver.getPOV() == 180)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 4 && driver.getPOV() == 270)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 5 && driver.getPOV() == 90)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 6 && driver.getPOV() == 270)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 7 && driver.getPOV() == 90)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 8 && driver.getRawButton(3))
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 9 && driver.getRawButton(1))
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(driver.getRawButton(2)) {        //button 2 switches back to 60% speed
+			key = 0;
 		}
 		
-		if(key3 && driver.getPOV() == 180)
-			key4 = true;
-		else if(!anyButtonPressed())
-			key3 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-		}
-		
-		if(key4 && driver.getPOV() == 270)
-			key5 = true;
-		else if(!anyButtonPressed())
-			key4 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-		}
-		
-		if(key5 && driver.getPOV() == 90)
-			key6 = true;
-		else if(!anyButtonPressed())
-			key5 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-		}
-		
-		if(key6 && driver.getPOV() == 270)
-			key7 = true;
-		else if(!anyButtonPressed())
-			key6 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-		}
-		
-		if(key7 && driver.getPOV() == 90)
-			key8 = true;
-		else if(!anyButtonPressed())
-			key7 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-			key7 = false;
-		}
-		
-		if(key8 && driver.getRawButton(3))
-			key9 = true;
-		else if(!anyButtonPressed())
-			key8 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-			key7 = false;
-			key8 = false;
-		}
-		
-		if(key9 && driver.getRawButton(1))
-			key10 = true;
-		else if(!anyButtonPressed())
-			key9 = true;
-		else {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-			key7 = false;
-			key8 = false;
-			key9 = false;
-		}
-		
-		if(driver.getRawButton(2)) {
-			key1 = false;
-			key2 = false;
-			key3 = false;
-			key4 = false;
-			key5 = false;
-			key6 = false;
-			key7 = false;
-			key8 = false;
-			key9 = false;
-			key10 = false;
-		}
-		
-		if(key10)
+		if(key == 10)
 			motorRatio = 1;
 		else
 			motorRatio = 0.6;
 		
-		// End special code for motorRatio
+		// End special useless code for motorRatio
 		
 		FBLSpeed = driver.getY() - driver.getZ();
 		FBRSpeed = -driver.getY() - driver.getZ();
 		
-		allSticks = Math.abs(driver.getY()) + Math.abs(driver.getZ());   //initializes a variable for the following if() statement
+		allSticks = Math.abs(driver.getY()) + Math.abs(driver.getZ());  // initializes a variable for the following if() statement
 		
-		if(allSticks > 1 / motorRatio) {    //makes sure the value sent to the motors are never above 1
+		if(allSticks > 1 / motorRatio) {                                // makes sure the value sent to the motors are never above 1
 			motorRatio = 1 / allSticks;
 		}
 		
 		System.out.println("Max Motor Speed: " + (motorRatio * 100) + "%");
 		
-		frontLeft.set(FBLSpeed * motorRatio);  //slows the bot to be usable and stable
+		frontLeft.set(FBLSpeed * motorRatio);                           // slows the bot to be usable and stable
 		backLeft.set(FBLSpeed * motorRatio);
 		frontRight.set(FBRSpeed * motorRatio);
 		backRight.set(FBRSpeed * motorRatio);
@@ -465,11 +354,11 @@ public class Robot extends IterativeRobot {
 		
 	}
 
-	/**
-	 * This function is called periodically during test mode
-	 */
+	
 	@Override
 	public void testPeriodic() {
+		
+		// Test for all motors, setting them to go forwards at motorRatio speed
 		
 		frontLeft.set(-motorRatio);
 		frontRight.set(motorRatio);
