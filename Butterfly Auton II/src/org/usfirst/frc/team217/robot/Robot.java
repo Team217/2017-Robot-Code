@@ -22,16 +22,16 @@ public class Robot extends IterativeRobot {
 	
 	// BEGIN CONSTANTS SECTION
 	
-	double motorRatio = 0.6;        // sets the maximum speed for drive motors
+	double motorRatio = 0.6;            // sets the maximum speed for drive motors
 	
 	final double motorLagSpeed = 1;     // go-to multiplier when making robot turn by slowing down one side
 	
 	// END CONSTANTS SECTION
 	
-	int i = 1;
+	int i = 1;                          // variable to determine whether to continue to next auton case
 	
-	double FBLSpeed, FBRSpeed;
-	double allSticks;
+	double FBLSpeed, FBRSpeed;          // variables to hold the speed of the left and right motors
+	double allSticks;                   // variable to make sure motor speed is never set to greater than 1
 	
 	// Booleans for motorRatio code
 	
@@ -57,11 +57,6 @@ public class Robot extends IterativeRobot {
 	
 	Joystick driver, operator;
 	
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	
 	double target = 0, position = 0, PIDSpeed = 0, error = 0, cumulativeError = 0;
 	
 	double normPID(double target, double position, double kP, double kI) {
@@ -85,21 +80,16 @@ public class Robot extends IterativeRobot {
 		int j;
 		
 		for(j = 0; j <= 12; j++) {
-			
 			if(driver.getRawButton(j))
 				return true;
-			
 		}
 		
 		for(j = 0; j <= 360; j++) {
-			
 			if(driver.getPOV() == j)
 				return true;
-			
 		}
 		
 		return false;
-		
 	}
 
 	@Override
@@ -122,7 +112,7 @@ public class Robot extends IterativeRobot {
 		driver = new Joystick(0);
 		operator = new Joystick(1);
 		
-		key1 = false;
+		key1 = false;              // resets the pointless code to be false
 		key2 = false;
 		key3 = false;
 		key4 = false;
@@ -204,7 +194,8 @@ public class Robot extends IterativeRobot {
 					backLeft.setEncPosition(0);
 					backRight.setEncPosition(0);
 					
-					i++;
+					i++;          // continues to next case
+					
 				}
 				
 				break;
@@ -223,15 +214,16 @@ public class Robot extends IterativeRobot {
 				
 				if(backLeft.getEncPosition() <= 600 && backLeft.getEncPosition() >= 400) {
 					
-					backLeft.set(0.5);
-					backRight.set(0.5);
-					frontRight.set(0.5);
-					frontLeft.set(0.5);
+					backLeft.set(0.25);          //keeps motors going to reach the hopper in time for the balls
+					backRight.set(0.25);
+					frontRight.set(0.25);
+					frontLeft.set(0.25);
 					
 					backLeft.setEncPosition(0);
 					backRight.setEncPosition(0);
 					
 					i++;
+					
 				}
 				
 				break;
@@ -259,6 +251,7 @@ public class Robot extends IterativeRobot {
 					backRight.setEncPosition(0);
 					
 					i++;
+					
 				}
 				
 				break;
@@ -269,8 +262,11 @@ public class Robot extends IterativeRobot {
 				backRight.set(0);
 				frontLeft.set(0);
 				frontRight.set(0);
+				
+				break;
+				
 			}
-
+			
 			break;
 			
 		default:
@@ -404,13 +400,23 @@ public class Robot extends IterativeRobot {
 			key9 = false;
 		}
 		
-		if(key10) {
-			motorRatio = 1;
-			System.out.println("Motor Speed: 100%");
-		} else {
-			motorRatio = 0.6;
-			System.out.println("Motor Speed: 60%");
+		if(driver.getRawButton(2)) {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+			key6 = false;
+			key7 = false;
+			key8 = false;
+			key9 = false;
+			key10 = false;
 		}
+		
+		if(key10)
+			motorRatio = 1;
+		else
+			motorRatio = 0.6;
 		
 		// End special code for motorRatio
 		
@@ -422,6 +428,8 @@ public class Robot extends IterativeRobot {
 		if(allSticks > 1 / motorRatio) {    //makes sure the value sent to the motors are never above 1
 			motorRatio = 1 / allSticks;
 		}
+		
+		System.out.println("Max Motor Speed: " + (motorRatio * 100) + "%");
 		
 		frontLeft.set(FBLSpeed * motorRatio);  //slows the bot to be usable and stable
 		backLeft.set(FBLSpeed * motorRatio);
