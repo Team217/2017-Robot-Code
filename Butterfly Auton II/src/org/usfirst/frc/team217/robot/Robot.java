@@ -184,7 +184,7 @@ public class Robot extends IterativeRobot {
 			
 			case 1:
 				
-				// This case moves the robot to the hopper trigger and presses it
+				// This case moves the robot to the hopper trigger and turns
 				
 				backLeft.set(-normPID(6400, backLeft.getEncPosition(), 0.000350, 0));
 				backRight.set(-normPID(-6000, backRight.getEncPosition(), 0.000500, 0));
@@ -211,7 +211,7 @@ public class Robot extends IterativeRobot {
 			
 			case 2:
 				
-				// This case makes the robot turn to move straight towards the hopper
+				// This case makes the robot turn so the back hits the hopper
 				
 				backLeft.set(-normPID(500, backLeft.getEncPosition(), 0.001200, 0));
 				backRight.set(0);
@@ -276,6 +276,9 @@ public class Robot extends IterativeRobot {
 		default:
 			
 			backLeft.set(0);
+			backRight.set(0);
+			frontLeft.set(0);
+			frontRight.set(0);
 			
 			break;
 		}
@@ -296,14 +299,14 @@ public class Robot extends IterativeRobot {
 		
 		if(key1 && driver.getPOV() == 0)
 			key2 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key1 = true;
 		else
 			key1 = false;
 		
 		if(key2 && driver.getPOV() == 180)
 			key3 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key2 = true;
 		else {
 			key1 = false;
@@ -312,7 +315,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key3 && driver.getPOV() == 180)
 			key4 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key3 = true;
 		else {
 			key1 = false;
@@ -322,7 +325,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key4 && driver.getPOV() == 270)
 			key5 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key4 = true;
 		else {
 			key1 = false;
@@ -333,7 +336,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key5 && driver.getPOV() == 90)
 			key6 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key5 = true;
 		else {
 			key1 = false;
@@ -345,7 +348,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key6 && driver.getPOV() == 270)
 			key7 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key6 = true;
 		else {
 			key1 = false;
@@ -358,7 +361,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key7 && driver.getPOV() == 90)
 			key8 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key7 = true;
 		else {
 			key1 = false;
@@ -372,7 +375,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key8 && driver.getRawButton(3))
 			key9 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key8 = true;
 		else {
 			key1 = false;
@@ -387,7 +390,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key9 && driver.getRawButton(1))
 			key10 = true;
-		else if(anyButtonPressed())
+		else if(!anyButtonPressed())
 			key9 = true;
 		else {
 			key1 = false;
@@ -425,7 +428,7 @@ public class Robot extends IterativeRobot {
 		frontRight.set(FBRSpeed * motorRatio);
 		backRight.set(FBRSpeed * motorRatio);
 		
-		if(driver.getRawButton(4)) {                   // Right Trigger activates semiomni mode
+		if(driver.getRawButton(4)) {                   // Top Button activates semiomni mode
 			
 			FLDrop.set(DoubleSolenoid.Value.kForward);
 			FRDrop.set(DoubleSolenoid.Value.kForward);
@@ -443,7 +446,7 @@ public class Robot extends IterativeRobot {
 			
 		}
 		
-		if(driver.getRawButton(6)) {                   // Both Triggers activates omni mode
+		if(driver.getRawButton(6)) {                   // Right Triggers activates omni mode
 			
 			FLDrop.set(DoubleSolenoid.Value.kReverse);
 			FRDrop.set(DoubleSolenoid.Value.kReverse);
@@ -460,10 +463,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		
-		frontLeft.set(0.5);
-		frontRight.set(-0.5);
-		backLeft.set(0.5);
-		backRight.set(-0.5);
+		frontLeft.set(-motorRatio);
+		frontRight.set(motorRatio);
+		backLeft.set(-motorRatio);
+		backRight.set(motorRatio);
 		
 	}
 	
