@@ -79,6 +79,28 @@ public class Robot extends IterativeRobot {
 		
 		return PIDSpeed;
 	}
+	
+	boolean anyButtonPressed() {
+		
+		int j;
+		
+		for(j = 0; j <= 12; j++) {
+			
+			if(driver.getRawButton(j))
+				return true;
+			
+		}
+		
+		for(j = 0; j <= 360; j++) {
+			
+			if(driver.getPOV() == j)
+				return true;
+			
+		}
+		
+		return false;
+		
+	}
 
 	@Override
 	public void robotInit() {
@@ -274,14 +296,14 @@ public class Robot extends IterativeRobot {
 		
 		if(key1 && driver.getPOV() == 0)
 			key2 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key1 = true;
 		else
 			key1 = false;
 		
 		if(key2 && driver.getPOV() == 180)
 			key3 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key2 = true;
 		else {
 			key1 = false;
@@ -290,7 +312,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key3 && driver.getPOV() == 180)
 			key4 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key3 = true;
 		else {
 			key1 = false;
@@ -300,7 +322,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key4 && driver.getPOV() == 270)
 			key5 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key4 = true;
 		else {
 			key1 = false;
@@ -311,7 +333,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key5 && driver.getPOV() == 90)
 			key6 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key5 = true;
 		else {
 			key1 = false;
@@ -323,7 +345,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key6 && driver.getPOV() == 270)
 			key7 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key6 = true;
 		else {
 			key1 = false;
@@ -336,7 +358,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key7 && driver.getPOV() == 90)
 			key8 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key7 = true;
 		else {
 			key1 = false;
@@ -350,7 +372,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key8 && driver.getRawButton(3))
 			key9 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key8 = true;
 		else {
 			key1 = false;
@@ -365,7 +387,7 @@ public class Robot extends IterativeRobot {
 		
 		if(key9 && driver.getRawButton(1))
 			key10 = true;
-		else if(driver.getRawButton(0))
+		else if(anyButtonPressed())
 			key9 = true;
 		else {
 			key1 = false;
