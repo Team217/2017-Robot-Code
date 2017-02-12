@@ -14,30 +14,48 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
 	final String defaultAuto = "Default";
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
 	// BEGIN CONSTANTS SECTION
-	final int BLTalonPort = 1;            // set these variables to the ports of the wheel motors
-	final int BRTalonPort = 9;
-	final int FRTalonPort = 3;
-	final int FLTalonPort = 0;
 	
-	final double motorRatio = 0.5;        // sets the maximum speed for drive motors
+	double motorRatio = 0.6;        // sets the maximum speed for drive motors
 	
 	final double motorLagSpeed = 1;     // go-to multiplier when making robot turn by slowing down one side
+	
 	// END CONSTANTS SECTION
 	
 	int i = 1;
+	
+	double FBLSpeed, FBRSpeed;
+	double allSticks;
+	
+	// Booleans for motorRatio code
+	
+	boolean key1 = false,
+			key2 = false,
+			key3 = false,
+			key4 = false,
+			key5 = false,
+			key6 = false,
+			key7 = false,
+			key8 = false,
+			key9 = false,
+			key10 = false;
+	
+	// End booleans for motorRatio code
 	
 	CANTalon frontLeft;
 	CANTalon backLeft;
 	CANTalon frontRight;
 	CANTalon backRight;
 	
-	Joystick driver;
+	DoubleSolenoid FLDrop, FRDrop, BLDrop, BRDrop;
+	
+	Joystick driver, operator;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -64,16 +82,35 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
+		
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		
-		frontLeft = new CANTalon(FLTalonPort);
-		frontRight = new CANTalon(FRTalonPort);
-		backLeft = new CANTalon(BLTalonPort);
-		backRight = new CANTalon(BRTalonPort);
+		frontLeft = new CANTalon(0);
+		frontRight = new CANTalon(3);
+		backLeft = new CANTalon(1);
+		backRight = new CANTalon(9);
+		
+		FLDrop = new DoubleSolenoid(0, 1);
+		FRDrop = new DoubleSolenoid(6, 7);
+		BLDrop = new DoubleSolenoid(2, 3);
+		BRDrop = new DoubleSolenoid(4, 5);
 		
 		driver = new Joystick(0);
+		operator = new Joystick(1);
+		
+		key1 = false;
+		key2 = false;
+		key3 = false;
+		key4 = false;
+		key5 = false;
+		key6 = false;
+		key7 = false;
+		key8 = false;
+		key9 = false;
+		key10 = false;
+		
 	}
 
 	/**
@@ -89,6 +126,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
 		autoSelected = chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
@@ -97,7 +135,13 @@ public class Robot extends IterativeRobot {
 		backLeft.setEncPosition(0);
 		backRight.setEncPosition(0);
 		
+		FLDrop.set(DoubleSolenoid.Value.kForward);  // Forward drops tractions, reverse drops omnis
+		FRDrop.set(DoubleSolenoid.Value.kForward);
+		BLDrop.set(DoubleSolenoid.Value.kReverse);
+		BRDrop.set(DoubleSolenoid.Value.kReverse);
+		
 		i = 1;
+		
 	}
 
 	/**
@@ -107,9 +151,11 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		
 		switch (autoSelected) {
+		
 		case customAuto:
 			
 			break;
+			
 		case defaultAuto:
 			
 			switch(i) {
@@ -206,6 +252,7 @@ public class Robot extends IterativeRobot {
 			break;
 			
 		default:
+			
 			backLeft.set(0);
 			
 			break;
@@ -214,11 +261,174 @@ public class Robot extends IterativeRobot {
 
 	/**
 	 * This function is called periodically during operator control
+	 * 
 	 */
+	
 	@Override
 	public void teleopPeriodic() {
 		
+		// Special code for motorRatio
 		
+		if(driver.getPOV() == 0)
+			key1 = true;
+		
+		if(key1 && driver.getPOV() == 0)
+			key2 = true;
+		else if(driver.getRawButton(0))
+			key1 = true;
+		else
+			key1 = false;
+		
+		if(key2 && driver.getPOV() == 180)
+			key3 = true;
+		else if(driver.getRawButton(0))
+			key2 = true;
+		else {
+			key1 = false;
+			key2 = false;
+		}
+		
+		if(key3 && driver.getPOV() == 180)
+			key4 = true;
+		else if(driver.getRawButton(0))
+			key3 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+		}
+		
+		if(key4 && driver.getPOV() == 270)
+			key5 = true;
+		else if(driver.getRawButton(0))
+			key4 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+		}
+		
+		if(key5 && driver.getPOV() == 90)
+			key6 = true;
+		else if(driver.getRawButton(0))
+			key5 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+		}
+		
+		if(key6 && driver.getPOV() == 270)
+			key7 = true;
+		else if(driver.getRawButton(0))
+			key6 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+			key6 = false;
+		}
+		
+		if(key7 && driver.getPOV() == 90)
+			key8 = true;
+		else if(driver.getRawButton(0))
+			key7 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+			key6 = false;
+			key7 = false;
+		}
+		
+		if(key8 && driver.getRawButton(3))
+			key9 = true;
+		else if(driver.getRawButton(0))
+			key8 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+			key6 = false;
+			key7 = false;
+			key8 = false;
+		}
+		
+		if(key9 && driver.getRawButton(1))
+			key10 = true;
+		else if(driver.getRawButton(0))
+			key9 = true;
+		else {
+			key1 = false;
+			key2 = false;
+			key3 = false;
+			key4 = false;
+			key5 = false;
+			key6 = false;
+			key7 = false;
+			key8 = false;
+			key9 = false;
+		}
+		
+		if(key10) {
+			motorRatio = 1;
+			System.out.println("Motor Speed: 100%");
+		} else {
+			motorRatio = 0.6;
+			System.out.println("Motor Speed: 60%");
+		}
+		
+		// End special code for motorRatio
+		
+		FBLSpeed = driver.getY() - driver.getZ();
+		FBRSpeed = -driver.getY() - driver.getZ();
+		
+		allSticks = Math.abs(driver.getY()) + Math.abs(driver.getZ());   //initializes a variable for the following if() statement
+		
+		if(allSticks > 1 / motorRatio) {    //makes sure the value sent to the motors are never above 1
+			motorRatio = 1 / allSticks;
+		}
+		
+		frontLeft.set(FBLSpeed * motorRatio);  //slows the bot to be usable and stable
+		backLeft.set(FBLSpeed * motorRatio);
+		frontRight.set(FBRSpeed * motorRatio);
+		backRight.set(FBRSpeed * motorRatio);
+		
+		if(driver.getRawButton(4)) {                   // Right Trigger activates semiomni mode
+			
+			FLDrop.set(DoubleSolenoid.Value.kForward);
+			FRDrop.set(DoubleSolenoid.Value.kForward);
+			BLDrop.set(DoubleSolenoid.Value.kReverse);
+			BRDrop.set(DoubleSolenoid.Value.kReverse);
+			
+		}
+		
+		if(driver.getRawButton(5)) {                   // Left Trigger activates traction mode
+			
+			FLDrop.set(DoubleSolenoid.Value.kForward);
+			FRDrop.set(DoubleSolenoid.Value.kForward);
+			BLDrop.set(DoubleSolenoid.Value.kForward);
+			BRDrop.set(DoubleSolenoid.Value.kForward);
+			
+		}
+		
+		if(driver.getRawButton(6)) {                   // Both Triggers activates omni mode
+			
+			FLDrop.set(DoubleSolenoid.Value.kReverse);
+			FRDrop.set(DoubleSolenoid.Value.kReverse);
+			BLDrop.set(DoubleSolenoid.Value.kReverse);
+			BRDrop.set(DoubleSolenoid.Value.kReverse);
+			
+		}
 		
 	}
 
@@ -227,10 +437,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		
 		frontLeft.set(0.5);
 		frontRight.set(-0.5);
 		backLeft.set(0.5);
 		backRight.set(-0.5);
+		
 	}
+	
 }
 
