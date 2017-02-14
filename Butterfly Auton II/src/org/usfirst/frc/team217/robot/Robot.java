@@ -57,13 +57,12 @@ public class Robot extends IterativeRobot {
 	
 	// End PID Section
 	
-	// Begin Special Motor Code Functions and Variables
 	
-	double key = 0;                     // variable to control the next key state
+	double key = 0;
+	
+	int j;
 	
 	boolean anyButtonPressed() {
-		
-		int j;
 		
 		for(j = 0; j <= 12; j++) {
 			if(driver.getRawButton(j))
@@ -78,7 +77,65 @@ public class Robot extends IterativeRobot {
 		return false;
 	}
 	
-	// End Special Motor Code Functions and Variables
+	void __() {
+		
+		if(driver.getPOV() == 0 && key == 0)
+			key++;
+		
+		if(key == 1 && driver.getPOV() == 0)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 2 && driver.getPOV() == 180)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 3 && driver.getPOV() == 180)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 4 && driver.getPOV() == 270)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 5 && driver.getPOV() == 90)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 6 && driver.getPOV() == 270)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 7 && driver.getPOV() == 90)
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 8 && driver.getRawButton(3))
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(key == 9 && driver.getRawButton(1))
+			key++;
+		else if(anyButtonPressed())
+			key = 0;
+		
+		if(driver.getRawButton(2))
+			key = 0;
+		
+		if(key == 10)
+			motorRatio = 1;
+		else
+			motorRatio = 0.6;
+	}
+	
 
 	@Override
 	public void robotInit() {
@@ -248,66 +305,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
-		// Special useless code for motorRatio
-		
-		if(driver.getPOV() == 0 && key == 0)
-			key++;
-		
-		if(key == 1 && driver.getPOV() == 0)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 2 && driver.getPOV() == 180)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 3 && driver.getPOV() == 180)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 4 && driver.getPOV() == 270)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 5 && driver.getPOV() == 90)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 6 && driver.getPOV() == 270)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 7 && driver.getPOV() == 90)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 8 && driver.getRawButton(3))
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 9 && driver.getRawButton(1))
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(driver.getRawButton(2)) {        //button 2 switches back to 60% speed
-			key = 0;
-		}
-		
-		if(key == 10)
-			motorRatio = 1;
-		else
-			motorRatio = 0.6;
-		
-		// End special useless code for motorRatio
+		__();
 		
 		FBLSpeed = driver.getY() - driver.getZ();
 		FBRSpeed = -driver.getY() - driver.getZ();
