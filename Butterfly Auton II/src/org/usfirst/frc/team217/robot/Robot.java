@@ -64,6 +64,8 @@ public class Robot extends IterativeRobot {
 	
 	boolean anyButtonPressed() {
 		
+		// Checks if any buttons on the Joysticks are currenty pressed
+		
 		for(j = 0; j <= 12; j++) {
 			if(driver.getRawButton(j))
 				return true;
@@ -77,64 +79,28 @@ public class Robot extends IterativeRobot {
 		return false;
 	}
 	
-	void __() {
-		
-		if(driver.getPOV() == 0 && key == 0)
-			key++;
-		
-		if(key == 1 && driver.getPOV() == 0)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 2 && driver.getPOV() == 180)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 3 && driver.getPOV() == 180)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 4 && driver.getPOV() == 270)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 5 && driver.getPOV() == 90)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 6 && driver.getPOV() == 270)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 7 && driver.getPOV() == 90)
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 8 && driver.getRawButton(3))
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(key == 9 && driver.getRawButton(1))
-			key++;
-		else if(anyButtonPressed())
-			key = 0;
-		
-		if(driver.getRawButton(2))
-			key = 0;
-		
-		if(key == 10)
-			motorRatio = 1;
-		else
-			motorRatio = 0.6;
-	}
+	void __() {if(driver.getPOV() == 0 && key == 0) key++;
+		if(key == 1 && driver.getPOV() == 0) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 2 && driver.getPOV() == 180) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 3 && driver.getPOV() == 180) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 4 && driver.getPOV() == 270) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 5 && driver.getPOV() == 90) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 6 && driver.getPOV() == 270) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 7 && driver.getPOV() == 90) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 8 && driver.getRawButton(3)) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(key == 9 && driver.getRawButton(1)) key++;
+		else if(anyButtonPressed()) key = 0;
+		if(driver.getRawButton(2)) key = 0;
+		if(key == 10) motorRatio = 1;
+		else motorRatio = 0.6;}
 	
 
 	@Override
