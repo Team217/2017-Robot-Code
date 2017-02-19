@@ -10,10 +10,14 @@ import java.lang.Math;
 
 public class Robot extends IterativeRobot {
 	
-	final String boilerHopper = "Boiler Hopper Auton";
-	final String boilerGear = "Boiler Gear Auton";
-	final String centralGear = "Central Gear Auton";
-	final String gearHopper = "Loader Gear and Hopper";
+	final String boilerHopperB = "Boiler Hopper Auton - Blue";
+	final String boilerGearB = "Boiler Gear Auton - Blue";
+	final String centralGearB = "Central Gear Auton - Blue";
+	final String gearHopperB = "Loader Gear and Hopper - Blue";
+	final String boilerHopperR = "Boiler Hopper Auton - Red";
+	final String boilerGearR = "Boiler Gear Auton - Red";
+	final String centralGearR = "Central Gear Auton - Red";
+	final String gearHopperR = "Loader Gear and Hopper - Red";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	
@@ -21,32 +25,32 @@ public class Robot extends IterativeRobot {
 	
 	// Start auton enumerations
 	
-	enum boilerHopperAuton {      // Gets balls from the hopper closest to boiler and shoots
+	enum boilerHopperAutonB {      // Gets balls from the hopper closest to boiler and shoots
 		toHopper,
 		hitHopper,
 		getHopper,
 		turntoBoiler,
 		shoot
 	}
-	boilerHopperAuton boilerHopperState;
+	boilerHopperAutonB boilerHopperStateB;
 	
-	enum boilerGearAuton {
+	enum boilerGearAutonB {
 		toGear,
 		dropGear,
 		turntoBoiler,
 		shoot
 	}
-	boilerGearAuton boilerGearState;
+	boilerGearAutonB boilerGearStateB;
 	
-	enum centralGearAuton {
+	enum centralGearAutonB {
 		toGear,
 		dropGear,
 		turntoBoiler,
 		shoot
 	}
-	centralGearAuton centralGearState;
+	centralGearAutonB centralGearStateB;
 	
-	enum gearHopperAuton {
+	enum gearHopperAutonB {
 		toGear,
 		dropGear,
 		turntoHopper,
@@ -54,7 +58,42 @@ public class Robot extends IterativeRobot {
 		hitHopper,
 		getHopper
 	}
-	gearHopperAuton gearHopperState;
+	gearHopperAutonB gearHopperStateB;
+	
+	enum boilerHopperAutonR {      // Gets balls from the hopper closest to boiler and shoots
+		toHopper,
+		hitHopper,
+		getHopper,
+		turntoBoiler,
+		shoot
+	}
+	boilerHopperAutonB boilerHopperStateR;
+	
+	enum boilerGearAutonR {
+		toGear,
+		dropGear,
+		turntoBoiler,
+		shoot
+	}
+	boilerGearAutonB boilerGearStateR;
+	
+	enum centralGearAutonR {
+		toGear,
+		dropGear,
+		turntoBoiler,
+		shoot
+	}
+	centralGearAutonB centralGearStateR;
+	
+	enum gearHopperAutonR {
+		toGear,
+		dropGear,
+		turntoHopper,
+		toHopper,
+		hitHopper,
+		getHopper
+	}
+	gearHopperAutonB gearHopperStateR;
 	
 	// End auton enumerations
 	
@@ -98,130 +137,6 @@ public class Robot extends IterativeRobot {
 	}
 	
 	// End PID Section
-	
-	
-	// Start Auton case functions
-	
-	// nextState determines whether or not to continue to the next state based off of a range of encoder values
-	
-	int LSEncMin, LMEncMin, RSEncMin, RMEncMin, LSEncMax, LMEncMax, RSEncMax, RMEncMax;    // variables for the parameters for the min and max enc positions to continue to next state
-		
-	boolean nextState(int LMEncMin, int LMEncMax, int LSEncMin, int LSEncMax, int RMEncMin, int RMEncMax, int RSEncMin, int RSEncMax) {
-		
-		if(leftSlave.getEncPosition() >= LMEncMin && leftSlave.getEncPosition() <= LMEncMax && rightSlave.getEncPosition() <= RSEncMax && rightSlave.getEncPosition() >= RSEncMin && rightMaster.getEncPosition() <= RMEncMax && rightMaster.getEncPosition() >= RMEncMin && leftSlave.getEncPosition() >= LSEncMin && leftSlave.getEncPosition() <= LSEncMax)
-			return true;
-		else
-			return false;
-		
-	}
-	
-	
-	void toHopperAuton() {
-
-		// This case moves the robot to the hopper trigger and turns
-		
-		leftSlave.set(-normPID(6400, leftSlave.getEncPosition(), 0.000350, 0));
-		rightSlave.set(-normPID(-6000, rightSlave.getEncPosition(), 0.000500, 0));
-		leftMaster.set(-normPID(6400, leftMaster.getEncPosition(), 0.000350, 0));
-		rightMaster.set(-normPID(-6000, rightMaster.getEncPosition(),0.000500, 0));
-		
-		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
-		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
-		
-		if(nextState(6150, 6600, 6150, 6600, -6400, -5850, -6400, -5850)) {     // LM Min, LM Max, LS Min, LS Max, RM Min, RM Max, RS Min, RS Max
-			
-			leftSlave.set(0);
-			rightSlave.set(0);
-			rightMaster.set(0);
-			leftMaster.set(0);
-			
-			rightMaster.setEncPosition(0);
-			rightSlave.setEncPosition(0);
-			leftMaster.setEncPosition(0);
-			leftSlave.setEncPosition(0);
-			
-			boilerHopperState = boilerHopperAuton.hitHopper;
-			
-		}
-		
-	}
-	
-	void hitHopperAuton() {
-
-		// This case makes the robot turn so the back hits the hopper
-		
-		leftSlave.set(-normPID(500, leftSlave.getEncPosition(), 0.001200, 0));
-		rightSlave.set(0);
-		leftMaster.set(-normPID(500, leftMaster.getEncPosition(), 0.001200, 0));
-		rightMaster.set(0);
-		
-		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
-		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
-		
-		if(nextState(400, 600, 400, 600, 0, 0, 0, 0)) {
-			
-			leftSlave.set(0.25);          // Keeps motors going to reach the hopper in time for the balls
-			rightSlave.set(0.25);
-			rightMaster.set(0.25);
-			leftMaster.set(0.25);
-			
-			rightMaster.setEncPosition(0);
-			rightSlave.setEncPosition(0);
-			leftMaster.setEncPosition(0);
-			leftSlave.setEncPosition(0);
-			
-			boilerHopperState = boilerHopperAuton.getHopper;
-			
-		}
-		
-	}
-	
-	void getHopperAuton() {
-
-		// This case moves the robot to the hopper itself to gather the balls
-		
-		leftSlave.set(-normPID(1150, leftSlave.getEncPosition(), 0.000650, 0));
-		rightSlave.set(-normPID(-1450, rightSlave.getEncPosition(), 0.000660, 0));
-		leftMaster.set(-normPID(1150, leftMaster.getEncPosition(), 0.000650, 0));
-		rightMaster.set(-normPID(-1450, rightMaster.getEncPosition(),0.000660, 0));
-		
-		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
-		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
-		
-		if(nextState(1150, 1350, 1150, 1350, -1650, -1450, -1650, -1450)) {
-			
-			leftSlave.set(0);
-			rightSlave.set(0);
-			rightMaster.set(0);
-			leftMaster.set(0);
-			
-			rightMaster.setEncPosition(0);
-			rightSlave.setEncPosition(0);
-			leftMaster.setEncPosition(0);
-			leftSlave.setEncPosition(0);
-			
-			boilerHopperState = boilerHopperAuton.turntoBoiler;
-			
-		}
-		
-	}
-	
-	void turntoBoilerAuton() {
-		
-		boilerHopperState = boilerHopperAuton.shoot;
-		
-	}
-	
-	void shootAuton() {
-		
-		leftSlave.set(0);
-		rightSlave.set(0);
-		leftMaster.set(0);
-		rightMaster.set(0);
-		
-	}
-	
-	// End Auton case functions
 	
 	
 	double key = 0;
@@ -270,10 +185,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		
-		chooser.addDefault("Boiler Hopper Auton", boilerHopper);
-		chooser.addObject("Boiler Gear Auton", boilerGear);
-		chooser.addObject("Central Gear Auton", centralGear);
-		chooser.addObject("Loader Gear and Hopper", gearHopper);
+		chooser.addDefault("Boiler Hopper Auton - Blue", boilerHopperB);
+		chooser.addObject("Boiler Gear Auton - Blue", boilerGearB);
+		chooser.addObject("Central Gear Auton - Blue", centralGearB);
+		chooser.addObject("Loader Gear and Hopper - Blue", gearHopperB);
+		chooser.addObject("Boiler Hopper Auton - Red", boilerHopperR);
+		chooser.addObject("Boiler Gear Auton - Red", boilerGearR);
+		chooser.addObject("Central Gear Auton - Red", centralGearR);
+		chooser.addObject("Loader Gear and Hopper - Red", gearHopperR);
 		SmartDashboard.putData("Auto choices", chooser);
 		
 		// Drive Motors (masters in front, slaves in back)
@@ -324,10 +243,10 @@ public class Robot extends IterativeRobot {
 		leftMaster.setEncPosition(0);
 		leftSlave.setEncPosition(0);
 		
-		boilerHopperState = boilerHopperAuton.toHopper;
-		boilerGearState = boilerGearAuton.toGear;
-		centralGearState = centralGearAuton.toGear;
-		gearHopperState = gearHopperAuton.toGear;
+		boilerHopperStateB = boilerHopperAutonB.toHopper;
+		boilerGearStateB = boilerGearAutonB.toGear;
+		centralGearStateB = centralGearAutonB.toGear;
+		gearHopperStateB = gearHopperAutonB.toGear;
 		
 		backSolenoid.set(true);
 		frontSolenoid.set(false);
@@ -338,36 +257,34 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		
 		switch (autoSelected) {
-		
-		
 			
-		case boilerHopper:
+		case boilerHopperB:
 			
-			switch(boilerHopperState) {
+			switch(boilerHopperStateB) {
 			
 			case toHopper:
 				
-				toHopperAuton();
+				toHopperAutonB();
 				break;
 			
 			case hitHopper:
 				
-				hitHopperAuton();
+				hitHopperAutonB();
 				break;
 				
 			case getHopper:
 				
-				getHopperAuton();
+				getHopperAutonB();
 				break;
 				
 			case turntoBoiler:
 				
-				turntoBoilerAuton();
+				turntoBoilerAutonB();
 				break;
 				
 			case shoot:
 				
-				shootAuton();
+				shootAutonB();
 				break;
 				
 			default:
@@ -388,7 +305,7 @@ public class Robot extends IterativeRobot {
 			
 			break;
 			
-		case boilerGear:
+		case boilerGearB:
 			
 			leftSlave.set(0);
 			rightSlave.set(0);
@@ -397,7 +314,7 @@ public class Robot extends IterativeRobot {
 			
 			break;
 			
-		case centralGear:
+		case centralGearB:
 			
 			leftSlave.set(0);
 			rightSlave.set(0);
@@ -406,13 +323,49 @@ public class Robot extends IterativeRobot {
 			
 			break;
 			
-		case gearHopper:
+		case gearHopperB:
 			
 			leftSlave.set(0);
 			rightSlave.set(0);
 			leftMaster.set(0);
 			rightMaster.set(0);
 			
+			break;
+			
+		case boilerHopperR:
+			
+			leftSlave.set(0);
+			rightSlave.set(0);
+			leftMaster.set(0);
+			rightMaster.set(0);
+			
+			break;
+			
+		case boilerGearR:
+	
+			leftSlave.set(0);
+			rightSlave.set(0);
+			leftMaster.set(0);
+			rightMaster.set(0);
+	
+			break;
+			
+		case centralGearR:
+			
+			leftSlave.set(0);
+			rightSlave.set(0);
+			leftMaster.set(0);
+			rightMaster.set(0);
+	
+			break;
+			
+		case gearHopperR:
+			
+			leftSlave.set(0);
+			rightSlave.set(0);
+			leftMaster.set(0);
+			rightMaster.set(0);
+	
 			break;
 		
 		default:
@@ -489,5 +442,127 @@ public class Robot extends IterativeRobot {
 		rightSlave.set(motorRatio);
 		
 	}
+	
+	// START Auton Case Functions
+	
+	void toHopperAutonB() {
+
+		// This case moves the robot to the hopper trigger and turns
+		
+		leftSlave.set(-normPID(6400, leftSlave.getEncPosition(), 0.000350, 0));
+		rightSlave.set(-normPID(-6000, rightSlave.getEncPosition(), 0.000500, 0));
+		leftMaster.set(-normPID(6400, leftMaster.getEncPosition(), 0.000350, 0));
+		rightMaster.set(-normPID(-6000, rightMaster.getEncPosition(),0.000500, 0));
+		
+		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
+		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
+		
+		if(nextState(6150, 6600, 6150, 6600, -6400, -5850, -6400, -5850)) {     // LM Min, LM Max, LS Min, LS Max, RM Min, RM Max, RS Min, RS Max
+			
+			leftSlave.set(0);
+			rightSlave.set(0);
+			rightMaster.set(0);
+			leftMaster.set(0);
+			
+			rightMaster.setEncPosition(0);
+			rightSlave.setEncPosition(0);
+			leftMaster.setEncPosition(0);
+			leftSlave.setEncPosition(0);
+			
+			boilerHopperStateB = boilerHopperAutonB.hitHopper;
+			
+		}
+		
+	}
+	
+	void hitHopperAutonB() {
+
+		// This case makes the robot turn so the back hits the hopper
+		
+		leftSlave.set(-normPID(500, leftSlave.getEncPosition(), 0.001200, 0));
+		rightSlave.set(0);
+		leftMaster.set(-normPID(500, leftMaster.getEncPosition(), 0.001200, 0));
+		rightMaster.set(0);
+		
+		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
+		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
+		
+		if(nextState(400, 600, 400, 600, 0, 0, 0, 0)) {
+			
+			leftSlave.set(0.25);          // Keeps motors going to reach the hopper in time for the balls
+			rightSlave.set(0.25);
+			rightMaster.set(0.25);
+			leftMaster.set(0.25);
+			
+			rightMaster.setEncPosition(0);
+			rightSlave.setEncPosition(0);
+			leftMaster.setEncPosition(0);
+			leftSlave.setEncPosition(0);
+			
+			boilerHopperStateB = boilerHopperAutonB.getHopper;
+			
+		}
+		
+	}
+	
+	void getHopperAutonB() {
+
+		// This case moves the robot to the hopper itself to gather the balls
+		
+		leftSlave.set(-normPID(1150, leftSlave.getEncPosition(), 0.000650, 0));
+		rightSlave.set(-normPID(-1450, rightSlave.getEncPosition(), 0.000660, 0));
+		leftMaster.set(-normPID(1150, leftMaster.getEncPosition(), 0.000650, 0));
+		rightMaster.set(-normPID(-1450, rightMaster.getEncPosition(),0.000660, 0));
+		
+		System.out.println("Back Left Encoder: " + leftSlave.getEncPosition());
+		System.out.println("Back Right Encoder: " + rightSlave.getEncPosition());
+		
+		if(nextState(1150, 1350, 1150, 1350, -1650, -1450, -1650, -1450)) {
+			
+			leftSlave.set(0);
+			rightSlave.set(0);
+			rightMaster.set(0);
+			leftMaster.set(0);
+			
+			rightMaster.setEncPosition(0);
+			rightSlave.setEncPosition(0);
+			leftMaster.setEncPosition(0);
+			leftSlave.setEncPosition(0);
+			
+			boilerHopperStateB = boilerHopperAutonB.turntoBoiler;
+			
+		}
+		
+	}
+	
+	void turntoBoilerAutonB() {
+		
+		boilerHopperStateB = boilerHopperAutonB.shoot;
+		
+	}
+	
+	void shootAutonB() {
+		
+		leftSlave.set(0);
+		rightSlave.set(0);
+		leftMaster.set(0);
+		rightMaster.set(0);
+		
+	}
+	
+	// nextState determines whether or not to continue to the next state based off of a range of encoder values
+	
+	int LSEncMin, LMEncMin, RSEncMin, RMEncMin, LSEncMax, LMEncMax, RSEncMax, RMEncMax;    // variables for the parameters for the min and max enc positions to continue to next state
+	
+	boolean nextState(int LMEncMin, int LMEncMax, int LSEncMin, int LSEncMax, int RMEncMin, int RMEncMax, int RSEncMin, int RSEncMax) {
+		
+		if(leftSlave.getEncPosition() >= LMEncMin && leftSlave.getEncPosition() <= LMEncMax && rightSlave.getEncPosition() <= RSEncMax && rightSlave.getEncPosition() >= RSEncMin && rightMaster.getEncPosition() <= RMEncMax && rightMaster.getEncPosition() >= RMEncMin && leftSlave.getEncPosition() >= LSEncMin && leftSlave.getEncPosition() <= LSEncMax)
+			return true;
+		else
+			return false;
+		
+	}
+	
+	// END Auton Case Functions
 	
 }
